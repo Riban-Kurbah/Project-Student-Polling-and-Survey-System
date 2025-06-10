@@ -1,0 +1,8 @@
+Array
+(
+    [id] => 10
+    [username] => adminuser
+    [email] => admin@example.com
+    [password] => $2y$10$KmGuR5b8zoIk7ZSF6NSCnum5qhXLtO8lGnamLDRUVX/Bfkvf./O1y
+    [is_admin] => 1
+)

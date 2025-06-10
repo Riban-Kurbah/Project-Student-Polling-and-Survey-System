@@ -1,0 +1,45 @@
+
+
+2025-05-12 21:45:06 - NEW REQUEST
+RAW INPUT: {"username":"polol","email":"polol@gmail.com","password":"password"}
+DECODED DATA: Array
+(
+    [username] => polol
+    [email] => polol@gmail.com
+    [password] => password
+)
+
+
+2025-05-12 21:45:59 - NEW REQUEST
+RAW INPUT: {"username":"polol","email":"polol@gmail.com","password":"12345678"}
+DECODED DATA: Array
+(
+    [username] => polol
+    [email] => polol@gmail.com
+    [password] => 12345678
+)
+
+
+2025-05-12 21:47:25 - NEW REQUEST
+RAW INPUT: {"username":"polol","email":"polol@gmail.com","password":"12345678"}
+DECODED DATA: Array
+(
+    [username] => polol
+    [email] => polol@gmail.com
+    [password] => 12345678
+)
+
+HASHED PW: $2y$10$9WeU1QdOzmVRlDf8rSEWY.MSaky938kiBOavdulFPiY/Ma1W7o4V6
+SUCCESS
+
+2025-05-12 22:11:47 - NEW REQUEST
+RAW INPUT: {"username":"JohnUser","email":"john123@gmail.com","password":"password1234"}
+DECODED DATA: Array
+(
+    [username] => JohnUser
+    [email] => john123@gmail.com
+    [password] => password1234
+)
+
+HASHED PW: $2y$10$f1yzFvcWqbvnswIdlJnQXO8M37JhWrkEhHLbVr2y0gr8NgLYHTUXC
+SUCCESS
