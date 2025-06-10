@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Create Survey</title>
+  <link rel="stylesheet" href="../css/pollcreate.css" />
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css" />
+  <style>
+    .question-block {
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 8px 12px;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+    #responseMessage {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Create New Survey</h2>
+
+<form id="surveyForm">
+  <label for="surveyTitle">Survey Title:</label>
+  <input type="text" id="surveyTitle" name="surveyTitle" required />
+
+  <div id="questionsContainer"></div>
+
+  <button type="button" onclick="addQuestion()">+ Add Question</button><br><br>
+  <button type="submit">Create Survey</button>
+  <p id="responseMessage" style="color: green;"></p>
+</form>
+
+<script>
+  let questionCount = 0;
+
+  function addQuestion() {
+    questionCount++;
+    const container = document.getElementById("questionsContainer");
+
+    const qDiv = document.createElement("div");
+    qDiv.classList.add("question-block");
+    qDiv.setAttribute("data-qid", questionCount);
+    qDiv.innerHTML = `
+      <label>Question ${questionCount}:</label>
+      <input type="text" name="question_${questionCount}" placeholder="Enter question" required />
+      <div class="options" id="options_${questionCount}">
+        <input type="text" name="option_${questionCount}[]" placeholder="Option 1" required /><br />
+        <input type="text" name="option_${questionCount}[]" placeholder="Option 2" required /><br />
+      </div>
+      <button type="button" onclick="addOption(${questionCount})">+ Add Option</button>
+    `;
+
+    container.appendChild(qDiv);
+  }
+
+  function addOption(qid) {
+    const optDiv = document.getElementById(`options_${qid}`);
+    const input = document.createElement("input");
+    input.type = "text";
+    input.name = `option_${qid}[]`;
+    input.placeholder = "New Option";
+    input.required = true;
+    optDiv.appendChild(input);
+    optDiv.appendChild(document.createElement("br"));
+  }
+
+  // Initialize with one question
+  window.onload = addQuestion;
+
+  document.getElementById("surveyForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const title = document.getElementById("surveyTitle").value.trim();
+    if (!title) {
+      alert("Survey title is required");
+      return;
+    }
+
+    const questions = [];
+    document.querySelectorAll(".question-block").forEach(qBlock => {
+      const qid = qBlock.getAttribute("data-qid");
+      const questionText = qBlock.querySelector(`[name="question_${qid}"]`).value.trim();
+      const optionInputs = qBlock.querySelectorAll(`[name="option_${qid}[]"]`);
+      const options = Array.from(optionInputs).map(opt => opt.value.trim()).filter(v => v !== "");
+
+      if (!questionText || options.length < 2) {
+        alert(`Please complete question ${qid} with at least 2 options.`);
+        return;
+      }
+
+      questions.push({ question: questionText, options });
+    });
+
+    fetch("http://localhost/ITA/api/create_survey.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, questions })
+    })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("responseMessage").textContent = data.message;
+      if (data.success) {
+        document.getElementById("surveyForm").reset();
+        document.getElementById("questionsContainer").innerHTML = "";
+        questionCount = 0;
+        addQuestion();
+      }
+    })
+    .catch(err => {
+      console.error("Error:", err);
+      document.getElementById("responseMessage").textContent = "Survey creation failed.";
+    });
+  });
+</script>
+
+</body>
+</html>
